@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Entrenadores {
+  id_entrenador Int        @id @default(autoincrement())
+  picture       String
+  nombre        String
+  ci            String     @unique
+  horario       String
+  entrenados    Int
+  telefono      String
+  clientes      Clientes[]
+}
+
+model Clientes {
+  id_ciente          Int          @id @default(autoincrement())
+  nombre             String
+  ci                 String       @unique
+  horario            String
+  fecha              DateTime
+  numero_inscripcion Int
+  id_entrenador      Int?
+  plan               Boolean
+  telefono           String?
+  picture            String?
+  estado             Boolean?
+  entrenador         Entrenadores? @relation(fields: [id_entrenador], references: [id_entrenador], onUpdate: Cascade, onDelete: SetNull)
+  payments          Payments[]
+}
+
+model User {
+  id_user  Int    @id @default(autoincrement())
+  nombre   String
+  password String
+}
+
+model Shop {
+  id          Int    @id @default(autoincrement())
+  picture     String
+  nombre      String @unique
+  compra      Float?
+  venta       Float
+  description String
+}
+
+model Sales {
+  id       Int      @id @default(autoincrement())
+  fecha    DateTime
+  producto String
+  precio   Float
+  cantidad Int
+  total    Float
+}
+
+model Payments{
+  id Int @id @default(autoincrement())
+  cliente Clientes? @relation(fields: [id_ciente], references: [id_ciente], onUpdate: Cascade, onDelete: SetNull)
+  id_ciente Int?
+  month String
+  amount Float
+}
+model Price{
+  id Int @id @default(autoincrement())
+  date DateTime
+  price Float
+}

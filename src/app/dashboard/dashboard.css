@@ -1,0 +1,14 @@
+@media (max-width: 900px) {
+  .sidebar-folded {
+    width: 60px;
+  }
+  .sidebar-folded ul {
+    padding-left: 0;
+  }
+  .sidebar-folded ul li {
+    justify-content: center;
+  }
+  .sidebar-folded ul li h3 {
+    display: none;
+  }
+}

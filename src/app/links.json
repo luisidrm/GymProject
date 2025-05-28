@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Dashboard",
+    "url":"/dashboard",
+    "icon":"/file.svg"
+  },
+  {
+    "name": "Bussines Results",
+    "url": "/dashboard/month",
+    "icon": "/globe.svg"
+  },
+  {
+    "name": "All Clients",
+    "url": "/dashboard/clients",
+    "icon": "/file.svg"
+  },
+  {
+    "name": "Trainers",
+    "url": "/dashboard/trainers",
+    "icon": "/file.svg"
+  },
+  {
+    "name": "Shop",
+    "url": "/dashboard/shop",
+    "icon": "/file.svg"
+  },
+  {
+    "name": "Users",
+    "url":"/dashboard/users",
+    "icon":"/globe.svg"
+  }
+]
