@@ -1,5 +1,6 @@
 "use client";
 
+import { Toaster } from "@/components/ui/toaster";
 // import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { usePathname } from "next/navigation";
@@ -25,7 +26,9 @@ export default function RootLayout({ children }) {
 
 	const content = (
 		<html lang="en">
-			<body>{children}</body>
+			<body>{children}
+				<Toaster/>
+			</body>
 		</html>
 	);
 	if (isLoginPage) return content;

@@ -6,9 +6,11 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CardSkeleton from "@/components/Skeletons/CardSkeleton";
 import { AlertDialogDemo } from "@/components/AlertDialog";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Page() {
 	const router = useRouter();
+	const { toast } = useToast();
 
 	const [data, setData] = useState([]);
 	const [imageSrc, setImageSrc] = useState("/avatar-trainer.svg");
@@ -20,6 +22,7 @@ export default function Page() {
 		phone: "",
 		entrenados: 0,
 	});
+	const [refresh, setRefresh] = useState(false);
 	const [elim, setElim] = useState(false);
 	const [element, setElement] = useState({});
 
@@ -33,23 +36,26 @@ export default function Page() {
 			}
 		};
 		fetchData();
-	}, []);
+	}, [refresh]);
 
 	const createTrainer = async () => {
-		try {
-			const response = await axios.post("http://localhost:3000/api/trainers", {
+		await axios
+			.post("http://localhost:3000/api/trainers", {
 				headers: {
 					"Content-Type": "text/plain;charset=utf-8",
 				},
 				data: {
 					info,
 				},
+			})
+			.then((res) => {
+				toast({ title: "Exito", description: res.data.message });
+				setRefresh(!refresh);
+			})
+			.catch((err) => {
+				toast({ title: "Error", description: res.data.message });
+				
 			});
-			alert(response.data.message);
-			router.push("/dashboard/trainers");
-		} catch (error) {
-			alert("Error al agregar Entrenador");
-		}
 	};
 
 	const handleImageChange = (e) => {
@@ -74,11 +80,13 @@ export default function Page() {
 				},
 			})
 			.then((res) => {
-				alert(res.message);
+				(e) => handleDelete(e, {});
+				toast({ title: "Exito", description: res.data.message });
 				setRefresh(!refresh);
 			})
 			.catch((err) => {
-				console.error(err);
+				(e) => handleDelete(e, {});
+				toast({ title: "Error", description: err.message });
 			});
 	};
 
@@ -86,12 +94,12 @@ export default function Page() {
 
 	return (
 		<div className="w-[80%] ml-[20%] max-lg:h-auto h-auto bg-slate-100 text-black user-select-none">
-      <AlertDialogDemo
-        elim={elim}
-        handleDelete={handleDelete}
-        deleteProd={deleteTrainer}
-        element={element}
-      />
+			<AlertDialogDemo
+				elim={elim}
+				handleDelete={handleDelete}
+				deleteProd={deleteTrainer}
+				element={element}
+			/>
 
 			<div className="h-[50px] w-[98%] mx-[1%] mt-4 bg-white flex place-items-center px-5 user-select-none shadow-md rounded-md font-semibold justify-center">
 				<h1 className="text-xl">Trainer's Information</h1>

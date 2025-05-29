@@ -11,14 +11,16 @@ import { CirclePlus, Pencil, ShoppingBasket, Trash } from "lucide-react";
 import TablaCompra from "@/components/TablaCompra.jsx";
 import { data } from "autoprefixer";
 import AddProduct from "@/components/AddProduct.jsx";
+import { useToast } from "@/hooks/use-toast.js";
 
 export default function Page() {
-	const router = useRouter();
+	const { toast } = useToast();
 
 	const [add, setAdd] = useState(false);
 	const [edit, setEdit] = useState(false);
 	const [elim, setElim] = useState(false);
 	const [cart, setCart] = useState(false);
+	const [refresh, setRefresh] = useState(false);
 
 	const [products, setProducts] = useState([]);
 	const [element, setElement] = useState({});
@@ -35,7 +37,7 @@ export default function Page() {
 			}
 		};
 		fetchData();
-	}, []);
+	}, [refresh]);
 
 	const handleCart = () => {
 		setCart(!cart);
@@ -69,8 +71,12 @@ export default function Page() {
 					id: product.id,
 				},
 			})
-			.then(() => {
-				router.push("/dashboard/shop");
+			.then((res) => {
+				toast({ title: "Exito", description: res.data.message });
+				setRefresh(!refresh);
+			})
+			.catch((err) => {
+				toast({ title: "Error", description: err.message });
 			});
 	};
 
@@ -92,12 +98,19 @@ export default function Page() {
 	};
 	return (
 		<div className="w-[80%] ml-[20%] max-lg:h-auto h-[100%] min-h-[100vh] bg-slate-100 text-black user-select-none">
-			<AddProduct add={add} handleAdd={handleAdd} />
+			<AddProduct
+				add={add}
+				handleAdd={handleAdd}
+				setRefresh={setRefresh}
+				refresh={refresh}
+			/>
 			<EditProduct
 				edit={edit}
 				handleEdit={handleEdit}
 				element={element}
 				setElement={setElement}
+				setRefresh={setRefresh}
+				refresh={refresh}
 			/>
 			<AlertDialogDemo
 				elim={elim}
@@ -110,20 +123,22 @@ export default function Page() {
 				handleCart={handleCart}
 				selectedProduct={selectedProduct}
 				setSelectedProduct={setSelectedProduct}
+				setRefresh={setRefresh}
+				refresh={refresh}
 			/>
 			<div className="h-[50px] w-[98%] mx-[1%] mt-4 bg-white flex place-items-center px-5 user-select-none shadow-md rounded-md font-semibold justify-between ">
 				<h1 className="xl:text-xl md:text-lg">Store Management</h1>
 				<div className="flex gap-3">
-					<Button onClick={handleCart} className='relative' >
+					<Button onClick={handleCart} className="relative">
 						<ShoppingBasket />
 						<span className="max-md:hidden">Carrito</span>
-						{selectedProduct.length > 0 ? 
+						{selectedProduct.length > 0 ? (
 							<div className="absolute w-[20px] h-[20px] right-[-8px] top-[-8px] z-20 rounded-full bg-red-600">
 								{selectedProduct.length}
 							</div>
-						:
-						"" 
-						 }
+						) : (
+							""
+						)}
 					</Button>
 					<Button onClick={handleAdd} className="rounded-full">
 						<CirclePlus size={48} />

@@ -1,9 +1,18 @@
+import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function EditProduct({ edit, handleEdit, element, setElement }) {
+export default function EditProduct({
+	edit,
+	handleEdit,
+	element,
+	setElement,
+	setRefresh,
+	refresh,
+}) {
 	const router = useRouter();
+	const { toast } = useToast();
 
 	const editProduct = async (element) => {
 		await axios
@@ -16,13 +25,20 @@ export default function EditProduct({ edit, handleEdit, element, setElement }) {
 				},
 			})
 			.then((res) => {
-				console.log(res.data);
-								
-				alert(`${res.data.message} ${res.data.product.nombre}`);
-				window.location.reload()
+				handleEdit();
+				toast({
+					title: "Exito",
+					description: res.data.message,
+				});
+				setElement({})
+				setRefresh(!refresh);
 			})
 			.catch((err) => {
-				console.error(err);
+				handleEdit()
+				toast({
+					title: "Error",
+					description: err.message,
+				});
 			});
 	};
 

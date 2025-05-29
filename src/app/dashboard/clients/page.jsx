@@ -8,13 +8,16 @@ import axios from "axios";
 import { Plus } from "lucide-react";
 import { ContextMenuDemo } from "@/components/ContextMenu";
 import { AlertDialogDemo } from "@/components/AlertDialog";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Clients() {
+	const { toast } = useToast();
+
 	const [cliente, setCliente] = useState([]);
 	const [price, setPrice] = useState();
 	const [elim, setElim] = useState(false);
 	const [element, setElement] = useState({});
-	const [refresh, setRefresh] = useState(false)
+	const [refresh, setRefresh] = useState(false);
 
 	const [foundElements, setFoundElements] = useState([]);
 	const [isSearching, setIsSearching] = useState(false);
@@ -57,15 +60,19 @@ export default function Clients() {
 				price: price,
 			})
 			.then((res) => {
-				alert(res.data.message);
-				window.location.reload();
+				toast({ title: "Exito", description: res.data.message });
+				setRefresh(!refresh);
 			});
 	};
 
 	const updatePrice = async () => {
-		await axios.post("http://localhost:3000/api/clients/price", {
-			price,
-		});
+		await axios
+			.post("http://localhost:3000/api/clients/price", {
+				price,
+			})
+			.then(() => {
+				toast({ title: "Exito", description: "Precio actualizado" });
+			});
 	};
 
 	const obtenerMes = () => {
@@ -80,35 +87,37 @@ export default function Clients() {
 				reset: true,
 			})
 			.then((res) => {
-				alert(res.data.message);
-				window.location.reload();
+				toast({ title: "Exito", description: res.data.message });
+				setRefresh(!refresh);
 			});
 	};
 
-	const handleDelete = (e,element) => {
-		e.preventDefault()
+	const handleDelete = (e, element) => {
+		e.preventDefault();
 		setElement(element);
 		setElim(!elim);
 	};
 
-	const deleteClient = async(element)=>{
-		await axios.delete('http://localhost:3000/api/clients',{
-			data:{
-				id_ciente:element.id_ciente
-			}
-		}).then((res)=>{
-			alert(res.message)
-			setRefresh(!refresh)
-		}).catch((err)=>{
-			console.error(err)
-		})
-	}
-
+	const deleteClient = async (element) => {
+		await axios
+			.delete("http://localhost:3000/api/clients", {
+				data: {
+					id_ciente: element.id_ciente,
+				},
+			})
+			.then((res) => {
+				toast({ title: "Exito", description: res.data.message });
+				setRefresh(!refresh);
+			})
+			.catch((err) => {
+				toast({ title: "Error", description: err.message });
+			});
+	};
 
 	return (
 		<div className="w-[80%] ml-[20%] max-lg:h-auto h-auto bg-slate-100 text-black user-select-none">
-			<AlertDialogDemo 
-				elim={elim} 
+			<AlertDialogDemo
+				elim={elim}
 				handleDelete={handleDelete}
 				element={element}
 				deleteProd={deleteClient}
@@ -164,7 +173,7 @@ export default function Clients() {
 				{foundElements.length > 0
 					? foundElements.map((client) => (
 							<div
-								onContextMenu={(e) => handleDelete(e,client)}
+								onContextMenu={(e) => handleDelete(e, client)}
 								onDoubleClick={(e) => changeStatus(e, client.id_ciente)}
 								className={
 									client.estado === true

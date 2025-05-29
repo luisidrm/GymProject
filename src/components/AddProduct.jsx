@@ -1,9 +1,11 @@
+import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function AddProduct({ add, handleAdd }) {
+export default function AddProduct({ add, handleAdd, setRefresh, refresh }) {
 	const router = useRouter();
+	const {toast} = useToast()
 
 	const [element, setElement] = useState({
 		picture: {},
@@ -29,11 +31,12 @@ export default function AddProduct({ add, handleAdd }) {
 				},
 			)
 			.then((res) => {
-				alert("Elemento agregado exitosamente");
-				window.location.reload()
+				handleAdd()
+				toast({ title: "Exito", description: res.data.message });
+				setRefresh(!refresh)
 			})
 			.catch((error) => {
-				console.error(error);
+				toast({ title: "Error", description: error.message });
 			});
 	};
 

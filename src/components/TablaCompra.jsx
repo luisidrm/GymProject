@@ -14,14 +14,18 @@ import {
 import { Button } from "./ui/button.jsx";
 import { SidebarClose } from "lucide-react";
 import axios from "axios";
-import { data } from "autoprefixer";
+import { useToast } from "@/hooks/use-toast.js";
 
 export default function TablaCompra({
 	cart,
 	handleCart,
 	selectedProduct,
 	setSelectedProduct,
+	setRefresh,
+	refresh
 }) {
+	const {toast} = useToast()
+
 	const costoTotal = () => {
 		let total = 0;
 		selectedProduct.map((product) => {
@@ -50,12 +54,15 @@ export default function TablaCompra({
 					fullPrice: costoTotal(),
 
 			})
-			.then(() => {
-				alert("Venta Completada");
-				window.location.reload();
+			.then((res) => {
+				handleCart()
+				toast({ title: "Exito", description: res.data.message });
+				setSelectedProduct([])
+				setRefresh(!refresh)
 			})
 			.catch((err) => {
-				alert(err.message);
+				toast({ title: "Error", description: err.message });
+
 			});
 	};
 

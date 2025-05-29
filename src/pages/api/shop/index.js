@@ -40,7 +40,7 @@ export default async function handler(req, res) {
           }
         })
       })
-      res.status(200).json({ message: "Hello world" })
+      res.status(200).json({ message: "Venta completada" })
     } catch (error) {
       console.error(error)
     } finally {
