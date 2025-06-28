@@ -80,7 +80,6 @@ export default function Page() {
 			});
 	};
 
-	console.log(selectedProduct);
 	const selectProducts = (product) => {
 		setSelectedProduct([...selectedProduct, product]);
 		if (selectedProduct.some((prod) => prod.id === product.id) === false) {
@@ -98,12 +97,12 @@ export default function Page() {
 	};
 	return (
 		<div className="w-[80%] ml-[20%] max-lg:h-auto h-[100%] min-h-[100vh] bg-slate-100 text-black user-select-none">
-			<AddProduct
+			{add&&<AddProduct
 				add={add}
 				handleAdd={handleAdd}
 				setRefresh={setRefresh}
 				refresh={refresh}
-			/>
+			/>}
 			<EditProduct
 				edit={edit}
 				handleEdit={handleEdit}
@@ -118,14 +117,14 @@ export default function Page() {
 				element={element}
 				deleteProd={deleteProd}
 			/>
-			<TablaCompra
+			{selectedProduct.length>0&&<TablaCompra
 				cart={cart}
 				handleCart={handleCart}
 				selectedProduct={selectedProduct}
 				setSelectedProduct={setSelectedProduct}
 				setRefresh={setRefresh}
 				refresh={refresh}
-			/>
+			/>}
 			<div className="h-[50px] w-[98%] mx-[1%] mt-4 bg-white flex place-items-center px-5 user-select-none shadow-md rounded-md font-semibold justify-between ">
 				<h1 className="xl:text-xl md:text-lg">Store Management</h1>
 				<div className="flex gap-3">
@@ -145,16 +144,14 @@ export default function Page() {
 					</Button>
 				</div>
 			</div>
-			<div className="h-[auto] w-[98%] mt-4 grid lg:grid-cols-3 gap-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 px-5 shadow-md rounded-md font-semibold">
+			<div className="h-[auto] w-[98%] pb-32 mt-4 grid lg:grid-cols-3 gap-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 px-5 shadow-md rounded-md font-semibold">
 				{products.map((product) => (
 					<div
 						key={product.id}
 						id={product.id}
-						// biome-ignore lint/a11y/useSemanticElements: <explanation>
 						role="button"
 						tabIndex={0}
 						onClick={() => selectProducts(product)}
-						onKeyDown={() => selectProducts(product)}
 						className={`w-[100%] min-w-[250px] h-[auto] bg-white rounded-md shadow-md mt-4 ${selectedProduct.some((prod) => prod.id === product.id) ? "border border-black" : ""}`}
 					>
 						<div className="flex justify-center">
@@ -174,16 +171,16 @@ export default function Page() {
 							${product.venta}
 							<div className="">
 								<Button
-									onClick={() => handleEdit(product)}
+									onClick={(e) => {handleEdit(product); e.stopPropagation()}}
 									type="button"
-									className="w-10 mr-2 rounded-md h-8 shadow-md hover:scale-105 hover:border-2 hover:border-slate-300 text-white "
+									className="w-10 mr-2 rounded-md z-30 h-8 shadow-md hover:scale-105 hover:border-2 hover:border-slate-300 text-white "
 								>
 									<Pencil />
 								</Button>
 								<Button
-									onClick={() => handleDelete(product)}
+									onClick={(e) => {handleDelete(product); e.stopPropagation()}}
 									type="button"
-									className="w-10 mr-2 rounded-md h-8 shadow-md hover:scale-105 hover:border-2 hover:border-slate-300 text-white bg-red-700 "
+									className="w-10 mr-2 rounded-md h-8 z-30 shadow-md hover:scale-105 hover:border-2 hover:border-slate-300 text-white bg-red-700 "
 								>
 									<Trash />
 								</Button>

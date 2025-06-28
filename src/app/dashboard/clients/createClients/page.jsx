@@ -52,15 +52,6 @@ export default function Page() {
 			blah.src = URL.createObjectURL(file);
 			setInfo({ ...info, picture: blah.src });
 		}
-
-		//   const reader = new FileReader();
-		//   reader.onload = () => {
-		// setInfo({...info, picture :file.name});
-		// setImageSrc(file.name)
-		//   };
-		//   reader.readAsDataURL(file);
-		//   console.log(reader.readAsText(file))
-		// }
 	};
 
 	const fecha = new Date();

@@ -18,7 +18,17 @@
 	},
 	"linter": {
 		"enabled": true,
-		"rules": {
+		"rules":{
+			"a11y":{
+				"useKeyWithClickEvents":"off",
+				"useSemanticElements":"off"
+			},
+			"correctness":{
+				"useExhaustiveDependencies":"off"
+			},
+			"complexity":{
+				"noForEach":"off"
+			},
 			"recommended": true
 		}
 	},

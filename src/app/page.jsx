@@ -37,9 +37,9 @@ export default function Home({ csrfToken }) {
 				alt="Logo"
 				width={200}
 				height={200}
-				className="mb-[20px] w-[200px] h-[200px] absolute top-[9%] rounded-full shadow-md"
+				className="mb-8 w-[200px] h-[200px] absolute top-[6%] rounded-full shadow-md"
 			/>
-			<div className="lg:w-[30%] md:w-[50%] h-[50%] bg-transparent w-[80%] shadow-b-xl rounded-md flex flex-col justify-center">
+			<div className="lg:w-[30%] md:w-[50%] h-[50%]  bg-transparent w-[80%] shadow-b-xl rounded-md flex flex-col justify-center">
 				<h3 className="mb-[20px] text-3xl font-thin text-center text-slate-50">
 					Login into your Account
 				</h3>

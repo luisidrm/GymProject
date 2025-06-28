@@ -49,14 +49,31 @@ export default async function handler(req, res) {
 
   }
   if (req.method === 'DELETE') {
-    console.log(req.body);
-        
+
     const { id } = req.body
-    await prisma.shop.delete({
+    const getProd = (await prisma.shop.findUnique({
       where: {
         id: id
       }
-    })
-    res.status(200).json({ message: "Producto eliminado correctamente" })
+    })).picture
+    const hashedPic = getProd.split("/")[getProd.split("/").length - 1]
+    const filePath = join(process.cwd(), 'public', 'storage', hashedPic);
+    console.log("eso");
+
+    // if (fs.existsSync(filePath)) {
+    if (fs.existsSync(filePath)) {
+      fs.unlink(filePath, async (err) => {
+        if(err){
+          return res.status(500).json({ message: "Error al eliminar el archivo", err: err })
+        }
+        await prisma.shop.delete({
+          where: {
+            id: id
+          }
+        })
+      })
+      
+      res.status(200).json({ message: "Producto eliminado correctamente" })
+    }
   }
 }
