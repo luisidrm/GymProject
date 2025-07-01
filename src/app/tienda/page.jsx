@@ -2,12 +2,21 @@
 
 import LandingPage from "@/components/Landing";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 import axios from "axios";
 import { Pencil, Trash } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function Page() {
+	const [reservation, setReservation] = useState({
+		nombre: "",
+		numero: "",
+		cantidad: "",
+		fecha: "",
+		horario: "",
+		especial: "",
+	});
 	const [products, setProducts] = useState([]);
 
 	useEffect(() => {
@@ -21,12 +30,32 @@ export default function Page() {
 		};
 		fetchData();
 	}, []);
-	
+
+	const makeReservation = async () => {
+		await axios
+			.post("http://localhost:3000/api/reservations", {
+				reservation,
+			})
+			.then(() => {
+				toast({
+					title: "Exito",
+					description:
+						"Reservación solicitada exitosamente nos pondremos en contacto con usted para realizar la confirmación",
+				});
+			});
+	};
 
 	return (
-		<div>
-			<LandingPage products ={products} />
-				<h2 className="text-center bg-slate-100 text-2xl font-semibold font-[Helvetica]">Consulta Nuestro Menu</h2>
+		<div className="bg-slate-100">
+			<LandingPage
+				products={products}
+				reservation={reservation}
+				setReservation={setReservation}
+				sendData={makeReservation}
+			/>
+			<div className="h-[50px] w-[98%] mx-[1%] mt-4 mb-2 bg-white flex place-items-center px-5 user-select-none shadow-md rounded-md font-semibold justify-center">
+				<h1 id="menu" className="text-xl">Nuestra Oferta</h1>
+			</div>
 			<div className="h-[auto] bg-slate-100 w-[100%] pb-72 grid lg:grid-cols-4 gap-3 md:grid-cols-3 sm:grid-cols-2 grid-cols-2 shadow-md rounded-md font-semibold">
 				{products.map((product) => (
 					<div

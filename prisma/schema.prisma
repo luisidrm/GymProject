@@ -70,3 +70,12 @@ model Price{
   date DateTime
   price Float
 }
+model Reservation{
+  id Int @id @default(autoincrement())
+  fecha DateTime
+  nombre String
+  numero String
+  cantidad Int
+  horario String
+  especial String?
+}

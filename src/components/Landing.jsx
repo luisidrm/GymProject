@@ -4,6 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { Facebook } from "react-content-loader";
 import styled from "styled-components";
 
 // ---- Styled Components ----
@@ -28,29 +29,15 @@ const Hero = styled.section`
 
 const Title = styled.h1`
   font-size: 4rem;
+	font-weight: 600;
   color: #fff;
   margin: 0.2em 0;
 `;
 
 const Subtitle = styled.p`
-  font-size: 1.5rem;
-  color: #e0fbfc;
-  margin-bottom: 1.5em;
 `;
 
 const CTAButton = styled.a`
-  background-color: darkgreen;
-  color: white;
-  padding: 1em 2em;
-  font-size: 1.2rem;
-  font-weight: bold;
-  border-radius: 50px;
-  text-decoration: none;
-  transition: transform 0.2s, box-shadow 0.2s;
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  }
 `;
 
 const Section = styled.section`
@@ -82,16 +69,49 @@ const Card = styled.div`
 `;
 
 // ---- Component ----
-export default function LandingPage({ products }) {
+export default function LandingPage({
+	products,
+	reservation,
+	setReservation,
+	sendData,
+}) {
 	return (
 		<Container>
 			{/* Hero Section */}
 			<Hero>
 				<Title>RAY Pool Bar</Title>
-				<Subtitle className="px-2 font-thin">
-					Haz tu reserva y juega hoy mismo con tus amigos y familiares
-				</Subtitle>
-				<CTAButton href="#reserve">Reserva Ya!</CTAButton>
+					<Subtitle className="px-6 font-thin text-lg flex justify-center  text-center text-white">
+						Haz tu reserva y juega hoy mismo con tus amigos y familiares
+						asdasdasdasdasdasdasdasdasdadasdsad ashdahjkhjhasddsaj asdaklsjdlkj
+						aslkdjalkjsd alkjsdalkjda asjdjkasjh akjsdhkjhasd kjashdkjasdh
+					</Subtitle>
+				<CTAButton
+					className="bg-transparent text-white px-[2em] py-[15px] text-lg font-semibold rounded-none border-b-2 border-white"
+					href="#reserve"
+				>
+					Reserva Ya!
+				</CTAButton>
+				<CTAButton
+					href="#menu"
+					size="lg"
+					className="text-white font-semibold text-xl py-[15px] px-[2em] mt-4 hover:border-b-2 hover:border-white rounded-none"
+				>
+					Nuestra Oferta
+				</CTAButton>
+				<div className="w-[100%] bg-transparent flex justify-center">
+					<Link
+						className="text-white font-thin text-lg py-[5px] px-[1em] mt-4 hover:border-b-2 hover:border-white rounded-none"
+						href={""}
+					>
+						Whatsapp
+					</Link>
+					<Link
+						className="text-white text-lg font-thin py-[5px] px-[1em] mt-4 hover:border-b-2 hover:border-white rounded-none"
+						href={""}
+					>
+						Facebook
+					</Link>
+				</div>
 			</Hero>
 
 			{/* About Section */}
@@ -102,12 +122,15 @@ export default function LandingPage({ products }) {
 				<p className="px-5">
 					Somos un negocio que mezcla los conceptos de bar y billar para ofrecer
 					una experiencia completa a nuestros clientes.
-					<Link className="hover:text-blue-500 cursor-pointer" href={'https://maps.app.goo.gl/TqSxaFfkEsL3xL7n8'}>
+					<Link
+						className="hover:text-blue-500 text-white cursor-pointer"
+						href={"https://maps.app.goo.gl/TqSxaFfkEsL3xL7n8"}
+					>
 						{" "}
 						Nos encontramos en #313 calle Celestina Quintero e/ Central y Cabo
-						Brito
+						Brito.
 					</Link>
-					. RAY Pool Bar no es un negocio es una experiencia.
+					RAY Pool Bar no es un negocio es una experiencia.
 				</p>
 			</Section>
 
@@ -139,24 +162,63 @@ export default function LandingPage({ products }) {
 				</h2>
 				<p>Completa el formulario y te recibiremos cuando quieras</p>
 				<form style={{ maxWidth: "500px", width: "100%", marginTop: "1em" }}>
-					<input type="text" placeholder="Tu Nombre" style={inputStyle} />
-					<input type="text" placeholder="Tu Telefono" style={inputStyle} />
 					<input
 						type="text"
+						placeholder="Tu Nombre"
+						style={inputStyle}
+						value={reservation.nombre}
+						onChange={(e) =>
+							setReservation({ ...reservation, nombre: e.target.value })
+						}
+					/>
+					<input
+						type="text"
+						placeholder="Tu Telefono"
+						style={inputStyle}
+						value={reservation.numero}
+						onChange={(e) =>
+							setReservation({ ...reservation, numero: e.target.value })
+						}
+					/>
+					<input
+						type="number"
 						placeholder="Cantidad de Personas"
 						style={inputStyle}
+						value={reservation.cantidad}
+						onChange={(e) =>
+							setReservation({
+								...reservation,
+								cantidad: Number.parseInt(e.target.value),
+							})
+						}
 					/>
-					<input type="date" style={inputStyle} />
+					<input
+						type="date"
+						style={inputStyle}
+						value={reservation.fecha}
+						onChange={(e) =>
+							setReservation({ ...reservation, fecha: e.target.value })
+						}
+					/>
 					<input
 						type="text"
 						placeholder="Horario Estimado"
 						style={inputStyle}
+						value={reservation.horario}
+						onChange={(e) =>
+							setReservation({ ...reservation, horario: e.target.value })
+						}
 					/>
 					<textarea
-						placeholder="Peticiones Especiales"
+						placeholder="Peticiones Especiales??"
 						style={{ ...inputStyle, height: "100px" }}
+						maxLength={150}
+						value={reservation.especial}
+						onChange={(e) =>
+							setReservation({ ...reservation, especial: e.target.value })
+						}
 					/>
-					<button type="submit" style={submitStyle}>
+					<button type="button" onClick={sendData} style={submitStyle}>
 						Enviar Reservación
 					</button>
 				</form>

@@ -64,7 +64,7 @@ export default function Home({ csrfToken }) {
 					<button
 					type="button"
 						onClick={handleSubmit}
-						className="h-[35px] w-[70%] font-normal hover:bg-slate-200 flex justify-center text-center place-items-center bg-slate-500 mx-[20%] px-5 rounded-md mb-[20px] outline-2 border-none shadow-md outline-slate-400"
+						className="h-[35px] w-[70%] font-normal hover:bg-slate-200 flex justify-center text-center place-items-center bg-slate-500 mx-[20%] px-5 rounded-md mb-[10px] outline-2 border-none shadow-md outline-slate-400"
 					>
 						<span className="mr-1">Sign in</span>
 						<LogIn/>
