@@ -35,7 +35,6 @@ export default async function handler(req, res) {
         }
       })
       let response = [] 
-      // biome-ignore lint/complexity/noForEach: <explanation>
       fullAmount.forEach((amount)=>{
         response[calendar[amount.month]] = amount
       })
@@ -44,7 +43,7 @@ export default async function handler(req, res) {
       const newSubs = await prisma.clientes.count({
         where: {
           fecha: {
-            gte: firstDateOfMonth(new Date()),
+            gte: firstDateOfMonth(new Date()), 
           }
         }
       })

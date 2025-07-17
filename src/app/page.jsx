@@ -9,26 +9,28 @@ import { getCsrfToken, signIn } from "next-auth/react";
 export default function Home({ csrfToken }) {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 
 	const [error, setError] = useState("");
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await signIn("credentials", {
-      redirect: false,
-      username,
-      password,
+	const handleSubmit = async (e) => {
+		setIsLoading(true);
+		e.preventDefault();
+		const res = await signIn("credentials", {
+			redirect: false,
+			username,
+			password,
 			callbackUrl: "/dashboard",
-    });
+		});
 
 		console.log(res);
-		
 
-    if (res?.error) {
-      setError("Invalid username or password");
-    } else {
-      window.location.href = res.url;
-    }
-  };
+		if (res?.error) {
+			setError("Invalid username or password");
+		} else {
+			window.location.href = res.url;
+		}
+		setIsLoading(false);
+	};
 
 	return (
 		<div className="w-[100%] h-[100vh] flex flex-col place-items-center justify-center bg-gradient-to-b to-slate-800  from-slate-950 ">
@@ -62,12 +64,18 @@ export default function Home({ csrfToken }) {
 						placeholder="Password"
 					/>
 					<button
-					type="button"
+						type="button"
 						onClick={handleSubmit}
 						className="h-[35px] w-[70%] font-normal hover:bg-slate-200 flex justify-center text-center place-items-center bg-slate-500 mx-[20%] px-5 rounded-md mb-[10px] outline-2 border-none shadow-md outline-slate-400"
 					>
-						<span className="mr-1">Sign in</span>
-						<LogIn/>
+						{isLoading ? (
+							<div className="w-[25px] h-[25px] border-[3px] rounded-[50%] border-transparent border-t-slate-900 animate-spin" />
+						) : (
+							<span className="gap-1 flex justify-center place-items-center">
+								<LogIn />
+								Sign in
+							</span>
+						)}
 					</button>
 					{error && <p className="text-red-700 font-medium">{error}</p>}
 				</form>
@@ -77,7 +85,7 @@ export default function Home({ csrfToken }) {
 }
 
 Home.getInitialProps = async (context) => {
-  return {
-    csrfToken: await getCsrfToken(context),
-  };
+	return {
+		csrfToken: await getCsrfToken(context),
+	};
 };

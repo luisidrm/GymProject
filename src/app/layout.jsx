@@ -4,6 +4,9 @@ import { Toaster } from "@/components/ui/toaster";
 // import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import SearchComponent from "@/components/SearchComponent";
+import SocketComponent from "@/components/SocketComponent";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -15,10 +18,10 @@ import { usePathname } from "next/navigation";
 //   subsets: ["latin"],
 // });
 
-// export const metadata = {
-// 	title: "Gym Manager",
-// 	description: "You can keep control of your business here",
-// };
+const metadata = {
+	title: "Gym Manager",
+	description: "You can keep control of your business here",
+};
 
 export default function RootLayout({ children }) {
 	const pathname = usePathname();
@@ -30,7 +33,11 @@ export default function RootLayout({ children }) {
 				<Toaster/>
 			</body>
 		</html>
-	);
+);
+	useEffect(()=>{
+		document.title=metadata.title
+	})
+
 	if (isLoginPage) return content;
-	return <div>{content}</div>;
+	return <div><SocketComponent/> {content}</div>;
 }

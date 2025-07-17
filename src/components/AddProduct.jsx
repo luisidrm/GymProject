@@ -11,6 +11,7 @@ export default function AddProduct({ add, handleAdd, setRefresh, refresh }) {
 		picture: {},
 		nombre: "",
 		description: "",
+		compra: 0,
 		venta: 0,
 	});
 
@@ -97,10 +98,23 @@ export default function AddProduct({ add, handleAdd, setRefresh, refresh }) {
 					}
 				/>
 				<label
+					htmlFor="compra"
+					className="text-sm text-gray-900 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+				>
+					Precio de Compra
+				</label>
+				<input
+					className="flex mb-4 h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium"
+					type="number"
+					id="venta"
+					value={element.compra}
+					onChange={(e) => setElement({ ...element, compra: e.target.value })}
+				/>
+				<label
 					htmlFor="venta"
 					className="text-sm text-gray-900 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 				>
-					Precio
+					Precio de Venta
 				</label>
 				<input
 					className="flex mb-4 h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium"

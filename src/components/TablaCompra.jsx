@@ -19,6 +19,7 @@ import { useToast } from "@/hooks/use-toast.js";
 export default function TablaCompra({
 	cart,
 	handleCart,
+	setProducts,
 	selectedProduct,
 	setSelectedProduct,
 	setRefresh,
@@ -127,7 +128,7 @@ export default function TablaCompra({
 						</TableCell>
 						<TableCell>
 							<Button
-								onClick={handleCart}
+								onClick={()=>{handleCart();setSelectedProduct([])}}
 								className="bg-white text-black hover:text-white"
 								type="button"
 							>

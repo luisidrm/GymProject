@@ -69,3 +69,20 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+    #home {
+        @apply bg-no-repeat bg-center bg-cover;
+        background-image: radial-gradient(
+            circle at top right,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(255, 255, 255, 0.1) 28%,
+            rgba(255, 255, 255, 0.075) 28%,
+            rgba(255, 255, 255, 0.075) 45%,
+            rgba(255, 255, 255, 0.05) 45%,
+            rgba(255, 255, 255, 0.05) 63%,
+            rgba(255, 255, 255, 0.025) 63%,
+            rgba(255, 255, 255, 0.025) 100%
+        );
+    }
+}
