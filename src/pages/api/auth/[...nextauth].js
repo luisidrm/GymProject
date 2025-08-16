@@ -23,6 +23,7 @@ export async function getUser(username, password) {
     return {
       id: usuario.id_user,
       name: usuario.nombre,
+      role: usuario.rol
     };
   }
 
@@ -73,6 +74,7 @@ export const authOptions = {
         return {
           id: usuario.id_user.toString(), // make sure it's a string if using JWT
           name: usuario.nombre,
+          role: usuario.rol
         };
       },
     })
@@ -89,6 +91,7 @@ export const authOptions = {
     if (user) {
       token.id = user.id_user;
       token.name = user.name;
+      token.role = user.role
     }
     return token;
   },
@@ -97,6 +100,7 @@ export const authOptions = {
     // This runs when session is accessed, attaches token info to session
     session.user.id = token.id_user;
     session.user.name = token.name;
+    session.user.role = token.role
 
     return session;
   },

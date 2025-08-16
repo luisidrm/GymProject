@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     try{
-      const { id,nombre, description, venta } = req.body.data.element
+      const { id,nombre, description, venta,compra } = req.body.data.element
       const editProduct = await prisma.shop.update({
         where: {
           id: id,
@@ -17,6 +17,7 @@ export default async function handler(req, res) {
         nombre,
         description,
         venta: Number.parseFloat(venta),
+        compra: Number.parseFloat(compra)
       },
     });
     res.status(200).json({message: "Elemento modificado con exitos", product:editProduct})

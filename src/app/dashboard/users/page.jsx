@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { AlertDialogDemo } from "@/components/AlertDialog";
 import { useToast } from "@/hooks/use-toast";
+import { Trash } from "lucide-react";
 
 export default function createUser() {
 	const { toast } = useToast();
@@ -13,6 +14,8 @@ export default function createUser() {
 	const [data, setData] = useState([]);
 	const [user, setUser] = useState("");
 	const [password, setPassword] = useState("");
+	const [rol, setRol] = useState("Dependiente");
+	const [error, setError] = useState("");
 
 	const [element, setElement] = useState({});
 
@@ -33,12 +36,14 @@ export default function createUser() {
 		fetchData();
 	}, [refresh]);
 
-	console.log(data);
-
 	const createUser = async () => {
+		if (user === "" && password.length < 8) {
+			setError("La información de usuario esta incompleta o incorrecta");
+			return;
+		}
 		await axios
 			.post("http://localhost:3000/api/users", {
-				data: { user: user, password: password },
+				data: { user: user, password: password, rol },
 			})
 			.then((res) => {
 				toast({ title: "Exito", description: res.data.message });
@@ -102,7 +107,22 @@ export default function createUser() {
 								height={40}
 								className="rounded-full place-items-center"
 							/>
-							<p className="text-black ml-5">{usuario.nombre}</p>
+							<div className="block w-[60%]">
+								<p className="text-black ml-5">{usuario.nombre}</p>
+								<p className="text-slate-500 ml-5 text-[12px] font-thin">
+									{usuario.rol}
+								</p>
+							</div>
+							<Button
+								onClick={(e) => {
+									handleDelete(e, usuario);
+									e.stopPropagation();
+								}}
+								variant="error"
+								className="bg-transparent h-auto w-auto"
+							>
+								<Trash className="stroke-red-700" size={32} />
+							</Button>
 						</div>
 					))}
 				</div>
@@ -129,7 +149,21 @@ export default function createUser() {
 							className="mb-6 w-[90%] h-[35px] px-4 shadow-md rounded-md border-none outline-none focus:outline-2 focus:outline-slate-500"
 							placeholder="Contraseña"
 						/>
+						<p className="text-sm self-start mb-2 ml-2 text-slate-400">
+							Seleccione el rol del usuario
+						</p>
+						<select
+							name=""
+							id=""
+							onChange={(e) => setRol(e.target.value)}
+							className="mb-6 w-[90%] h-[35px] px-4 shadow-md rounded-md border-none outline-none focus:outline-2 focus:outline-slate-500"
+						>
+							<option value="Dependiente">Dependiente</option>
+							<option value="Administrador">Administrador</option>
+						</select>
 					</div>
+					{error && <p className="text-red-700 mb-2">{error}</p>}
+
 					<Button type="button" onClick={createUser}>
 						Agregar Usuario
 					</Button>

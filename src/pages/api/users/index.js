@@ -16,7 +16,8 @@ export default async function handler(req, res) {
       const users = allUsers.map((user) => {
         return {
           id: user.id_user,
-          nombre: user.nombre
+          nombre: user.nombre,
+          rol: user.rol
         }
       })
       res.status(200).json({ users })
@@ -29,27 +30,27 @@ export default async function handler(req, res) {
   }
   if (req.method === "POST") {
 
-    const { user, password } = req.body.data;
-    if (user.length > 0 && password.length > 8) {
+    const { user, password, rol } = req.body.data;    
+    if (user.length > 3 && password.length > 8) {
 
       try {
         // Hash the password before storing it in the database
         const salt = bcrypt.genSaltSync(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const nombre = user;
-
+        
         // Create the user in the database
         const addUser = await prisma.user.create({
           data: {
             nombre,
             password: hashedPassword,
+            rol:rol
           },
         });
 
         res.status(200).json({ message: "Usuario creado", user: addUser });
       } catch (error) {
         console.error("Error creating user:", error);
-        throw new Error("Failed to create user");
       } finally {
         await prisma.$disconnect();
       }

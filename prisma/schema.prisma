@@ -19,9 +19,9 @@ model Entrenadores {
 }
 
 model Clientes {
-  id_ciente          Int          @id @default(autoincrement())
+  id_ciente          Int           @id @default(autoincrement())
   nombre             String
-  ci                 String       @unique
+  ci                 String        @unique
   horario            String
   fecha              DateTime
   numero_inscripcion Int
@@ -31,51 +31,98 @@ model Clientes {
   picture            String?
   estado             Boolean?
   entrenador         Entrenadores? @relation(fields: [id_entrenador], references: [id_entrenador], onUpdate: Cascade, onDelete: SetNull)
-  payments          Payments[]
+  payments           Payments[]
 }
 
 model User {
-  id_user  Int    @id @default(autoincrement())
-  nombre   String
-  password String
+  id_user   Int      @id @default(autoincrement())
+  nombre    String   @unique
+  password  String
+  rol       TipoRol?
+  centro    Centro?  @relation(fields: [id_centro], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  id_centro Int?
+}
+
+enum TipoRol {
+  Administrador
+}
+
+model Centro {
+  id        Int    @id @default(autoincrement())
+  nombre    String
+  direccion String
+  horario   String
+  user      User[]
+  shop      Shop[]
 }
 
 model Shop {
   id          Int    @id @default(autoincrement())
   picture     String
   nombre      String @unique
-  compra      Float?
-  venta       Float
+  compra      Decimal? // Precio de compra
+  venta       Decimal // Precio de venta
   description String
+  id_centro   Int
+
+  // Relaciones
+  stock       Stock?
+  movimientos Movimiento[]
+  centro      Centro      @relation(fields: [id_centro], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Stock {
+  id         Int   @id @default(autoincrement())
+  producto   Shop  @relation(fields: [productoId], references: [id])
+  productoId Int   @unique
+  cantidad   Decimal
+}
+
+model Movimiento {
+  id         Int            @id @default(autoincrement())
+  tipo       MovimientoTipo
+  cantidad   Decimal
+  fecha      DateTime       @default(now())
+  producto   Shop           @relation(fields: [productoId], references: [id])
+  productoId Int
+  nota       String?
+}
+
+enum MovimientoTipo {
+  ENTRADA
+  SALIDA
+  AJUSTE
 }
 
 model Sales {
   id       Int      @id @default(autoincrement())
   fecha    DateTime
   producto String
-  precio   Float
-  cantidad Int
-  total    Float
+  precio   Decimal
+  cantidad Decimal
+  total    Decimal
 }
 
-model Payments{
-  id Int @id @default(autoincrement())
-  cliente Clientes? @relation(fields: [id_ciente], references: [id_ciente], onUpdate: Cascade, onDelete: SetNull)
+model Payments {
+  id        Int       @id @default(autoincrement())
+  cliente   Clientes? @relation(fields: [id_ciente], references: [id_ciente], onUpdate: Cascade, onDelete: SetNull)
   id_ciente Int?
-  month String
-  amount Float
+  month     String
+  amount    Decimal
 }
-model Price{
-  id Int @id @default(autoincrement())
-  date DateTime
-  price Float
+
+model Price {
+  id    Int      @id @default(autoincrement())
+  date  DateTime
+  price Decimal
 }
-model Reservation{
-  id Int @id @default(autoincrement())
-  fecha DateTime
-  nombre String
-  numero String
+
+model Reservation {
+  id       Int      @id @default(autoincrement())
+  fecha    DateTime
+  nombre   String
+  numero   String
   cantidad Int
-  horario String
+  horario  String
   especial String?
 }

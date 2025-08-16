@@ -5,8 +5,8 @@ import { useEffect } from "react";
 const SocketComponent = () => {
 	useEffect(() => {
 		const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-		const ws = new WebSocket("/api/socket");
-    
+		const ws = new WebSocket("http://localhost:3001/api/ws");
+		
 
 		ws.onopen = () => {
 			console.log("Connected to WebSocket");

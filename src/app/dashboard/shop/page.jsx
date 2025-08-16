@@ -7,7 +7,15 @@ import { AlertDialogDemo } from "../../../components/AlertDialog.jsx";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/navigation.js";
 import { Button } from "@/components/ui/button.jsx";
-import { CirclePlus, MessageCircleDashed, Notebook, NotebookText, Pencil, ShoppingBasket, Trash } from "lucide-react";
+import {
+	CirclePlus,
+	MessageCircleDashed,
+	Notebook,
+	NotebookText,
+	Pencil,
+	ShoppingBasket,
+	Trash,
+} from "lucide-react";
 import TablaCompra from "@/components/TablaCompra.jsx";
 import { data } from "autoprefixer";
 import AddProduct from "@/components/AddProduct.jsx";
@@ -135,23 +143,30 @@ export default function Page() {
 					refresh={refresh}
 				/>
 			)}
-			<Link href={'/dashboard/shop/cuadre'} className="w-[50px] h-[50px] z-10 rounded-full shadow-xl fixed top-[85%] left-[90%] bg-slate-900 flex justify-center place-items-center text-center">
-				<NotebookText stroke="white"/>
-			</Link>
+			<Button className="w-[50px] h-[50px] z-10 rounded-full shadow-xl fixed top-[85%] left-[90%] bg-slate-900 flex justify-center place-items-center text-center"
+				disabled={selectedProduct.length === 0}
+				onClick={handleCart}
+			>
+				<ShoppingBasket />
+				{selectedProduct.length > 0 ? (
+					<div className="absolute w-[20px] h-[20px] right-[-8px] top-[-8px] z-20 rounded-full bg-red-600">
+						{selectedProduct.length}
+					</div>
+				) : (
+					""
+				)}
+			</Button>
 			<div className="h-[50px] w-[98%] mx-[1%] mt-4 bg-white flex place-items-center px-5 user-select-none shadow-md rounded-md font-semibold justify-between ">
 				<h1 className="xl:text-xl md:text-lg">Store Management</h1>
 				<div className="flex gap-3">
-					<Button onClick={handleCart} className="relative">
-						<ShoppingBasket />
-						<span className="max-md:hidden">Carrito</span>
-						{selectedProduct.length > 0 ? (
-							<div className="absolute w-[20px] h-[20px] right-[-8px] top-[-8px] z-20 rounded-full bg-red-600">
-								{selectedProduct.length}
-							</div>
-						) : (
-							""
-						)}
-					</Button>
+					<Link
+						href={"/dashboard/shop/cuadre"}
+						className="bg-[#0f172a] inline-flex items-center md:px-3 px-6 place-items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+					>
+						<NotebookText stroke="white" />
+						<span className="max-md:hidden text-white">Cuadre</span>
+
+					</Link>
 					<Button onClick={handleAdd} className="rounded-full">
 						<CirclePlus size={48} />
 					</Button>

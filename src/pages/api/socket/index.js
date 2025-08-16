@@ -1,33 +1,31 @@
-import WebSocket from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
 import http from "node:http"
 import next from "next"
 
-const app = next({ dev: true })
-const handle = app.getRequestHandler()
-
-app.prepare().then(() => {
-  const server = createServer((req, res) => {
-    handle(req, res);
-  });
-
-  const wss = new WebSocket.Server({ server });
-
-  server.on('upgrade', (req, socket, head) => {
-    if (req.url === '/socket') {
-      wss.handleUpgrade(req, socket, head, (ws) => {
-        wss.emit('connection', ws, req);
-      });
-    } else {
-      socket.destroy();
-    }
-  });
-
+export default async function handler(req, res) {
+  
+  const wss = new WebSocketServer({ noServer: true });
   wss.on('connection', (ws) => {
-    console.log("client connected");
-    ws.on("message")
+    console.log("serving function");
+    ws.on('message', (message) => {
+      console.log('recived: %s', message);
+      ws.send(message);
+    })
   });
-  wss.handleUpgrade(req, req.socket, Buffer.alloc(0), function done(ws) {
+
+  if (!res.writableEnabled) {
+    res.writeHead(101, {
+      'Upgrade': 'websocket',
+      'Connection': 'Upgrade',
+      'Sec-Websocket-Accept': 's3pPLMBiTxaQ9kYGzzhZRbK+x0o=',
+      'Sec-Websocket-Protocol': 'chat, superchat',
+      'Sec-Websocket-Version': '13'
+
+    });
+    res.end();
+  }
+
+  wss.handleUpgrade(req, req.socket, Buffer.alloc(0), (ws) => {
     wss.emit('connection', ws, req);
-  });
-  server.listen(3000)
-})
+  })
+}

@@ -1,32 +1,42 @@
 [
-  {
-    "name": "Dashboard",
-    "url":"/dashboard",
-    "icon":"/file.svg"
-  },
-  {
-    "name": "Bussines Results",
-    "url": "/dashboard/month",
-    "icon": "/globe.svg"
-  },
-  {
-    "name": "All Clients",
-    "url": "/dashboard/clients",
-    "icon": "/file.svg"
-  },
-  {
-    "name": "Trainers",
-    "url": "/dashboard/trainers",
-    "icon": "/file.svg"
-  },
-  {
-    "name": "Shop",
-    "url": "/dashboard/shop",
-    "icon": "/file.svg"
-  },
-  {
-    "name": "Users",
-    "url":"/dashboard/users",
-    "icon":"/globe.svg"
-  }
+	{
+		"name": "Dashboard",
+		"url": "/dashboard",
+		"icon": "/file.svg",
+		"rol": "Administrador"
+	},
+	{
+		"name": "Bussines Results",
+		"url": "/dashboard/month",
+		"icon": "/globe.svg",
+		"rol": "Administrador"
+	},
+	{
+		"name": "All Clients",
+		"url": "/dashboard/clients",
+		"icon": "/file.svg"
+	},
+	{
+		"name": "Trainers",
+		"url": "/dashboard/trainers",
+		"icon": "/file.svg"
+	},
+	{
+		"name": "Almacén",
+		"url": "/dashboard/almacen",
+		"icon": "/file.svg",
+		"rol": "Administrador"
+
+	},
+	{
+		"name": "Shop",
+		"url": "/dashboard/shop",
+		"icon": "/file.svg"
+	},
+	{
+		"name": "Users",
+		"url": "/dashboard/users",
+		"icon": "/globe.svg",
+		"rol": "Administrador"
+	}
 ]
