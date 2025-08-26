@@ -15,6 +15,7 @@ import {
 	Pencil,
 	ShoppingBasket,
 	Trash,
+	Warehouse,
 } from "lucide-react";
 import TablaCompra from "@/components/TablaCompra.jsx";
 import { data } from "autoprefixer";
@@ -33,21 +34,28 @@ export default function Page() {
 	const [refresh, setRefresh] = useState(false);
 
 	const [products, setProducts] = useState([]);
+	const [center, setCenter] = useState([]);
+	const [selectedCenter, setSelectedCenter] = useState(-1);
+
 	const [element, setElement] = useState({});
 	const [selectedProduct, setSelectedProduct] = useState([]);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get("http://localhost:3000/api/shop");
-				console.log(response);
+				const response = await axios.get("http://localhost:3000/api/shop", {
+					params: {
+						centro: selectedCenter,
+					},
+				});
 				setProducts(response.data.products);
+				setCenter(response.data.centers);
 			} catch (error) {
 				console.error(error);
 			}
 		};
 		fetchData();
-	}, [refresh]);
+	}, [refresh, selectedCenter]);
 
 	const handleCart = () => {
 		setCart(!cart);
@@ -89,6 +97,7 @@ export default function Page() {
 				toast({ title: "Error", description: err.message });
 			});
 	};
+	console.log(selectedCenter);
 
 	const selectProducts = (product) => {
 		setSelectedProduct([...selectedProduct, product]);
@@ -106,13 +115,14 @@ export default function Page() {
 		}
 	};
 	return (
-		<div className="w-[80%] ml-[20%] max-lg:h-auto h-[100%] min-h-[100vh] bg-slate-100 text-black user-select-none">
+		<div className="w-full max-lg:h-auto h-[100%] min-h-[100vh] bg-slate-100 text-black user-select-none">
 			{add && (
 				<AddProduct
 					add={add}
 					handleAdd={handleAdd}
 					setRefresh={setRefresh}
 					refresh={refresh}
+					selectedCenter={selectedCenter}
 				/>
 			)}
 			{edit && (
@@ -123,6 +133,7 @@ export default function Page() {
 					setElement={setElement}
 					setRefresh={setRefresh}
 					refresh={refresh}
+					selectedCenter={selectedCenter}
 				/>
 			)}
 			{elim && (
@@ -141,9 +152,11 @@ export default function Page() {
 					setSelectedProduct={setSelectedProduct}
 					setRefresh={setRefresh}
 					refresh={refresh}
+					selectedCenter={selectedCenter}
 				/>
 			)}
-			<Button className="w-[50px] h-[50px] z-10 rounded-full shadow-xl fixed top-[85%] left-[90%] bg-slate-900 flex justify-center place-items-center text-center"
+			<Button
+				className="w-[50px] h-[50px] z-10 rounded-full shadow-xl fixed top-[85%] left-[90%] bg-slate-900 flex justify-center place-items-center text-center"
 				disabled={selectedProduct.length === 0}
 				onClick={handleCart}
 			>
@@ -159,29 +172,65 @@ export default function Page() {
 			<div className="h-[50px] w-[98%] mx-[1%] mt-4 bg-white flex place-items-center px-5 user-select-none shadow-md rounded-md font-semibold justify-between ">
 				<h1 className="xl:text-xl md:text-lg">Store Management</h1>
 				<div className="flex gap-3">
+					{selectedCenter !== -1 && (
 					<Link
-						href={"/dashboard/shop/cuadre"}
-						className="bg-[#0f172a] inline-flex items-center md:px-3 px-6 place-items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+						href={{
+							pathname: "/dashboard/shop/stock",
+							query: { selectedCenter: selectedCenter },
+						}}
+						className="bg-[#0f172a] inline-flex items-center md:px-2 px-6 place-items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
 					>
-						<NotebookText stroke="white" />
-						<span className="max-md:hidden text-white">Cuadre</span>
-
-					</Link>
-					<Button onClick={handleAdd} className="rounded-full">
-						<CirclePlus size={48} />
-					</Button>
+						<Warehouse stroke="white" />
+						<span className="max-md:hidden text-white">Stock</span>
+					</Link>)}
+					{selectedCenter !== -1 && (
+						<Link
+							href={{
+								pathname: "/dashboard/shop/cuadre",
+								query: { selectedCenter: selectedCenter },
+							}}
+							className="bg-[#0f172a] inline-flex items-center md:px-2 px-6 place-items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+						>
+							<NotebookText stroke="white" />
+							<span className="max-md:hidden text-white">Cuadre</span>
+						</Link>
+					)}
+					{selectedCenter !== -1 && (
+						<Button onClick={handleAdd} className="rounded-full">
+							<CirclePlus size={48} />
+						</Button>
+					)}
 				</div>
 			</div>
-			<div className="h-[auto] w-[98%] pb-32 mt-4 grid lg:grid-cols-3 gap-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 px-5 shadow-md rounded-md font-semibold">
-				{products.map((product) => (
-					<Suspense key={product.id} callback={<Loading />}>
+			<div className="w-[100%] h-auto bg-transparent flex justify-center">
+				<span className="h-[50px] w-[98%] mx-[1%] mt-4  bg-slate-950 flex place-items-center px-5 user-select-none shadow-md rounded-md font-semibold ">
+					{center.map((center) => (
+						<button
+							type="button"
+							key={center.id}
+							onClick={() => setSelectedCenter(center.id)}
+							className={`${center.id === selectedCenter && "border-b-white"} text-white border-transparent py-2 border-b-2 px-4 hover:border-b-2 hover:border-white`}
+						>
+							{center.nombre}
+						</button>
+					))}
+				</span>
+			</div>
+			<div className="h-[auto] min-h-60 w-[98%] pb-32 mt-4 grid lg:grid-cols-3 gap-3 xl:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 px-5 shadow-md rounded-md font-semibold">
+				{selectedCenter === -1 && (
+					<p className="absolute pt-32 w-[100%] place-items-center">
+						Seleccione un centro para comenzar a trabajar
+					</p>
+				)}
+				{selectedCenter !== -1 &&
+					products.map((product) => (
 						<div
 							key={product.id}
 							id={product.id}
 							role="button"
 							tabIndex={0}
 							onClick={() => selectProducts(product)}
-							className={`w-[100%] min-w-[250px] h-[auto] bg-white rounded-md shadow-md mt-4 ${selectedProduct.some((prod) => prod.id === product.id) ? "border border-black" : ""}`}
+							className={`w-[100%] min-w-[250px] h-auto bg-white rounded-md shadow-md mt-4 ${selectedProduct.some((prod) => prod.id === product.id) ? "border border-black" : ""}`}
 						>
 							<div className="flex justify-center">
 								<Image
@@ -224,8 +273,12 @@ export default function Page() {
 								</div>
 							</div>
 						</div>
-					</Suspense>
-				))}
+					))}
+				{products.length === 0 && selectedCenter !== -1 && (
+					<p className="absolute pt-32 w-[100%] place-items-center">
+						No existen productos en este centro
+					</p>
+				)}
 			</div>
 		</div>
 	);

@@ -4,10 +4,13 @@ const prisma = new PrismaClient()
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
+    const {centro} = req.query
+    const selector = Number.parseInt(centro)
     const today = (date = new Date()) => new Date(date.getFullYear(), date.getMonth(), date.getDate())
     const cuadre = await prisma.sales.groupBy({
       by: ["producto"],
       where: {
+        centroId: selector,
         fecha: {
           lte: new Date(),
           gte: today()

@@ -23,7 +23,8 @@ export default function TablaCompra({
 	selectedProduct,
 	setSelectedProduct,
 	setRefresh,
-	refresh
+	refresh,
+	selectedCenter
 }) {
 	const {toast} = useToast()
 
@@ -51,6 +52,7 @@ export default function TablaCompra({
 	const completarVenta = async () => {
 		await axios
 			.post("http://localhost:3000/api/shop", {
+					centro: selectedCenter,
 					products: selectedProduct,
 					fullPrice: costoTotal(),
 
@@ -62,7 +64,7 @@ export default function TablaCompra({
 				setRefresh(!refresh)
 			})
 			.catch((err) => {
-				toast({ title: "Error", description: err.message });
+				toast({ title: "Error", description: err.response.data.message });
 
 			});
 	};
@@ -75,7 +77,7 @@ export default function TablaCompra({
 					: "hidden"
 			}
 		>
-			<Table className="bg-slate-100 w-[50%] ml-[] mr-[25%] rounded-lg overflow-clip ">
+			<Table className="bg-slate-100 w-[50%] ml-[17%] mr-[25%] rounded-lg overflow-clip ">
 				<TableCaption className="text-white">
 					Lista completa de la compra.
 				</TableCaption>

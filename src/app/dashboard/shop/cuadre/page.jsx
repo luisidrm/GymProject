@@ -12,8 +12,12 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Page() {
+	const searchParams = useSearchParams()
+  const selectedCenter = searchParams.get('selectedCenter')
+	
 	const [data, setData] = useState([]);
 	const [calculadora, setCalculadora] = useState(false);
 	const [money, setMoney] = useState();
@@ -21,7 +25,11 @@ export default function Page() {
 	useEffect(() => {
 		const fetchData = async () => {
 			await axios
-				.get("http://localhost:3000/api/cuadre")
+				.get("http://localhost:3000/api/cuadre",{
+					params:{
+						centro: selectedCenter
+					}
+				})
 				.then((res) => {
 					setData(res.data.cuadreFull);
 				})
@@ -40,7 +48,7 @@ export default function Page() {
   );
 
   const costoTotal = data.reduce(
-    (acc, v) => acc + v.compra??0 * v._sum.cantidad,
+    (acc, v) => acc + Number.parseFloat(v.compra??0) * Number.parseFloat(v._sum.cantidad),
     0
   );
 
@@ -50,10 +58,8 @@ export default function Page() {
     ? (utilidadBruta / ventasBrutas) * 100
     : 0;
 
-  // const productosVendidos = ventas.reduce((acc, v) => acc + v.cantidad, 0);
-	console.log(calculadora);
 	return (
-		<div className="w-[80%] ml-[20%] max-lg:h-auto h-[100%] min-h-[100vh] bg-slate-100 text-black user-select-none">
+		<div className="w-full max-lg:h-auto h-[100%] min-h-[100vh] bg-slate-100 text-black user-select-none">
 			{calculadora && (
 				<Calculadora
 					calculadora={calculadora}

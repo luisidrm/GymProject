@@ -45,21 +45,24 @@ model User {
 
 enum TipoRol {
   Administrador
+  Dependiente
+  null
 }
 
 model Centro {
-  id        Int    @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   nombre    String
   direccion String
   horario   String
   user      User[]
   shop      Shop[]
+  sales     Sales[]
 }
 
 model Shop {
-  id          Int    @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   picture     String
-  nombre      String @unique
+  nombre      String   
   compra      Decimal? // Precio de compra
   venta       Decimal // Precio de venta
   description String
@@ -68,13 +71,13 @@ model Shop {
   // Relaciones
   stock       Stock?
   movimientos Movimiento[]
-  centro      Centro      @relation(fields: [id_centro], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  centro      Centro       @relation(fields: [id_centro], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 model Stock {
-  id         Int   @id @default(autoincrement())
-  producto   Shop  @relation(fields: [productoId], references: [id])
-  productoId Int   @unique
+  id         Int     @id @default(autoincrement())
+  producto   Shop    @relation(fields: [productoId], references: [id])
+  productoId Int     @unique
   cantidad   Decimal
 }
 
@@ -101,6 +104,8 @@ model Sales {
   precio   Decimal
   cantidad Decimal
   total    Decimal
+  centroId Int
+  centro   Centro   @relation(fields: [centroId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 model Payments {

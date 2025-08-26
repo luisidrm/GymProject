@@ -68,7 +68,7 @@ export default function Dashboard() {
 	};
 
 	return (
-		<div className="w-[80%] ml-[20%] h-auto sm:h-[100%] pb-[200px] md:pb-[500px] bg-slate-100 text-black user-select-none">
+		<div className="w-full h-auto sm:h-[100%] pb-[200px] md:pb-[500px] bg-slate-100 text-black user-select-none">
 			{eliminar && (
 				<AlertDialogDemo
 					elim={eliminar}

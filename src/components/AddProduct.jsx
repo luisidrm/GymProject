@@ -3,12 +3,19 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function AddProduct({ add, handleAdd, setRefresh, refresh }) {
+export default function AddProduct({
+	add,
+	handleAdd,
+	setRefresh,
+	refresh,
+	selectedCenter,
+}) {
 	const router = useRouter();
-	const {toast} = useToast()
+	const { toast } = useToast();
 
 	const [element, setElement] = useState({
 		picture: {},
+		id_centro: selectedCenter,
 		nombre: "",
 		description: "",
 		compra: 0,
@@ -21,9 +28,9 @@ export default function AddProduct({ add, handleAdd, setRefresh, refresh }) {
 			.post(
 				"http://localhost:3000/api/shop/create",
 				{
-					data:{
+					data: {
 						element: element,
-					}
+					},
 				},
 				{
 					headers: {
@@ -32,9 +39,9 @@ export default function AddProduct({ add, handleAdd, setRefresh, refresh }) {
 				},
 			)
 			.then((res) => {
-				handleAdd()
+				handleAdd();
 				toast({ title: "Exito", description: res.data.message });
-				setRefresh(!refresh)
+				setRefresh(!refresh);
 			})
 			.catch((error) => {
 				toast({ title: "Error", description: error.message });
@@ -43,13 +50,9 @@ export default function AddProduct({ add, handleAdd, setRefresh, refresh }) {
 
 	return (
 		<div
-			className={
-				add === true
-					? "z-50 w-[100%] h-[100%] fixed top-0 flex  backdrop-brightness-50 place-items-center justify-center"
-					: "hidden"
-			}
+			className="z-50 w-[100vw] h-[100vh] fixed top-0 flex backdrop-brightness-50 place-items-center "
 		>
-			<div className="flex flex-col min-w-[412px] h-[auto] w-[50%] mr-[25%] bg-slate-50 py-5 px-20 shadow-md rounded-md">
+			<div className="flex flex-col min-w-[412px] h-[auto] w-[80%] md:w-[50%] bg-slate-50 py-5 px-20 shadow-md rounded-md fixed left-[10%] md:left-[25%]">
 				<h2 className="text-2xl text-slate-950 mb-4 mt-2 font-semibold">
 					Agregar un Producto
 				</h2>

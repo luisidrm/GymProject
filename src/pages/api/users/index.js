@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
+    const centers = await prisma.centro.findMany()
       const allUsers = await prisma.user.findMany({
         where: {
           nombre: {
@@ -17,10 +18,11 @@ export default async function handler(req, res) {
         return {
           id: user.id_user,
           nombre: user.nombre,
-          rol: user.rol
+          rol: user.rol,
+          id_centro: user.id_centro
         }
       })
-      res.status(200).json({ users })
+      res.status(200).json({ users:users, centers:centers })
     } catch (error) {
       res.status(500).json({ message: error })
     } finally {
@@ -30,7 +32,7 @@ export default async function handler(req, res) {
   }
   if (req.method === "POST") {
 
-    const { user, password, rol } = req.body.data;    
+    const { user, password, rol, id_centro } = req.body.data;    
     if (user.length > 3 && password.length > 8) {
 
       try {
@@ -44,7 +46,8 @@ export default async function handler(req, res) {
           data: {
             nombre,
             password: hashedPassword,
-            rol:rol
+            rol:rol,
+            id_centro:Number.parseInt(id_centro)
           },
         });
 

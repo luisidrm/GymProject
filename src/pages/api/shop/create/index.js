@@ -29,8 +29,6 @@ export default async function handler(req, res) {
 
     return new Promise((resolve, reject) => {
       form.parse(req, async (err, fields, files) => {
-        console.log("fields", fields);
-        console.log("files", files);
         
         if (err) {
           console.error("Error parsing the form:", err);
@@ -44,10 +42,14 @@ export default async function handler(req, res) {
         }
 
         try {
+          
           // Save the file path or other details to the database
+          const id_centro = fields['data[element][id_centro]'][0];          
           const nombre = fields['data[element][nombre]'][0];
           const description  = fields['data[element][description]'][0];
           const venta  = fields['data[element][venta]'][0];
+          const compra  = fields['data[element][compra]'][0];
+
 
           // Rename and move the file to the desired location
           const newFilePath = path.join(uploadDir, file[0].newFilename);
@@ -58,9 +60,17 @@ export default async function handler(req, res) {
               picture: `/storage/${file[0].newFilename}`, // Save relative path
               nombre,
               description,
+              id_centro:Number.parseInt(id_centro),
               venta: Number.parseFloat(venta),
+              compra:Number.parseFloat(compra)
             },
           });
+          await prisma.stock.create({
+            data:{
+              productoId:addProduct.id,
+              cantidad:0
+            }
+          })
 
           resolve(res.status(200).json({ message: "File uploaded and product added", product: addProduct }));
         } catch (error) {

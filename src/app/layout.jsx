@@ -29,15 +29,20 @@ export default function RootLayout({ children }) {
 
 	const content = (
 		<html lang="en">
-			<body>{children}
-				<Toaster/>
+			<body className="flex w-full m-0 p-0 overflow-x-hidden ">
+				{children}
+				<Toaster />
 			</body>
 		</html>
-);
-	useEffect(()=>{
-		document.title=metadata.title
-	})
+	);
+	useEffect(() => {
+		document.title = metadata.title;
+	});
 
 	if (isLoginPage) return content;
-	return <div><SocketComponent/> {content}</div>;
+	return (
+		<div className="w-full flex">
+			<SocketComponent /> {content}
+		</div>
+	);
 }

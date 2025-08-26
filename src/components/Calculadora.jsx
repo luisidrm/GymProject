@@ -42,13 +42,10 @@ export default function Calculadora({
 
 	return (
 		<div
-			className={
-				calculadora
-					? "w-[100%] h-[100%] flex justify-center place-items-center absolute backdrop-brightness-50 z-20"
-					: "hidden"
-			}
+			className="z-50 w-[100vw] h-[100vh] fixed top-0 flex backdrop-brightness-50 place-items-center"
 		>
-			<Table className="bg-slate-100 md:w-[40%] ml-[] mr-[25%] rounded-lg overflow-clip ">
+
+			<Table className="bg-slate-100 rounded-lg min-w-[412px] top-20 h-[auto] w-[80%] md:w-[50%] overflow-clip fixed left-[10%] md:left-[25%]">
 				<TableCaption className="text-white">
 					Calculadora de billetes
 				</TableCaption>

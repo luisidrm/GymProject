@@ -62,7 +62,7 @@ export default function Month() {
 	};
 
 	return (
-		<div className="w-[80%] ml-[20%] max-lg:h-auto h-[100vh] bg-slate-100 text-black user-select-none">
+		<div className="w-full max-lg:h-auto h-[100vh] bg-slate-100 text-black user-select-none">
 			<div className="h-[50px] w-[98%] mx-[1%] mt-4 bg-white flex place-items-center px-5 user-select-none shadow-md rounded-md font-semibold justify-between">
 				<h1 className="text-xl">Month Results</h1>
 				<h2 className="text-slate-500">{obtenerMes()}</h2>

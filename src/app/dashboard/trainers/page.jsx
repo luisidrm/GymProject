@@ -93,7 +93,7 @@ export default function Page() {
 	console.log(info);
 
 	return (
-		<div className="w-[80%] ml-[20%] max-lg:h-auto h-auto bg-slate-100 text-black user-select-none">
+		<div className="w-full max-lg:h-auto h-auto bg-slate-100 text-black user-select-none">
 			<AlertDialogDemo
 				elim={elim}
 				handleDelete={handleDelete}

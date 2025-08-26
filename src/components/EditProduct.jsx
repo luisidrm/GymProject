@@ -45,13 +45,10 @@ export default function EditProduct({
 	return (
 		// <div className={edit === true ? 'h-[100vh] z-20 w-[100vw]': 'hidden'}>
 		<div
-			className={
-				edit === true
-					? "z-50 w-[100%] h-[100vh] top-0 fixed flex  backdrop-brightness-50 place-items-center overflow-hidden justify-center"
-					: "hidden"
-			}
+			className="z-50 w-[100vw] h-[100vh] fixed top-0 flex backdrop-brightness-50 place-items-center "
 		>
-			<div className="flex flex-col min-w-[412px] h-[auto] w-[50%] mr-[25%] bg-slate-50 py-5 px-20 shadow-md rounded-md">
+			<div className="flex flex-col min-w-[412px] h-[auto] w-[80%] md:w-[50%] bg-slate-50 py-5 px-20 shadow-md rounded-md fixed left-[10%] md:left-[25%]">
+
 				<h2 className="text-2xl text-slate-950 mb-4 mt-2">
 					Edicion del Producto
 				</h2>

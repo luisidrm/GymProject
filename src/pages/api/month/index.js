@@ -54,7 +54,7 @@ export default async function handler(req, res) {
       
       const netSales = await prisma.sales.findMany({})
       netSales.map((sales)=>{
-        yearSales = yearSales + sales.total
+        yearSales = yearSales + Number.parseFloat(sales.total)
       })
 
       res.status(200).json({ response, newSubs, activeMembers, yearSales })

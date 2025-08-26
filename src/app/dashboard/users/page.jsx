@@ -12,9 +12,12 @@ export default function createUser() {
 	const { toast } = useToast();
 
 	const [data, setData] = useState([]);
+	const [centers, setCenters] = useState([]);
+
 	const [user, setUser] = useState("");
 	const [password, setPassword] = useState("");
 	const [rol, setRol] = useState("Dependiente");
+	const [selectedCenter, setSelectedCenter] = useState(null);
 	const [error, setError] = useState("");
 
 	const [element, setElement] = useState({});
@@ -28,6 +31,7 @@ export default function createUser() {
 				.get("http://localhost:3000/api/users")
 				.then((res) => {
 					setData(res.data.users);
+					setCenters(res.data.centers);
 				})
 				.catch((err) => {
 					alert(err.message);
@@ -43,7 +47,7 @@ export default function createUser() {
 		}
 		await axios
 			.post("http://localhost:3000/api/users", {
-				data: { user: user, password: password, rol },
+				data: { user: user, password: password, rol, id_centro: selectedCenter },
 			})
 			.then((res) => {
 				toast({ title: "Exito", description: res.data.message });
@@ -79,7 +83,7 @@ export default function createUser() {
 	};
 
 	return (
-		<div className="w-[80%] ml-[20%] max-lg:h-auto h-[100vh] bg-slate-100 text-black user-select-none">
+		<div className="w-full max-lg:h-auto h-[100vh] bg-slate-100 text-black user-select-none">
 			<AlertDialogDemo
 				elim={elim}
 				handleDelete={handleDelete}
@@ -112,6 +116,14 @@ export default function createUser() {
 								<p className="text-slate-500 ml-5 text-[12px] font-thin">
 									{usuario.rol}
 								</p>
+								{usuario.id_centro && (
+									<p className="text-slate-500 ml-5 text-[12px] font-thin">
+										{
+											centers.filter((p) => p.id === usuario.id_centro)[0]
+												.nombre
+										}
+									</p>
+								)}
 							</div>
 							<Button
 								onClick={(e) => {
@@ -160,6 +172,19 @@ export default function createUser() {
 						>
 							<option value="Dependiente">Dependiente</option>
 							<option value="Administrador">Administrador</option>
+						</select>
+						<select
+							name=""
+							id=""
+							onChange={(e) => setSelectedCenter(e.target.value)}
+							className="mb-6 w-[90%] h-[35px] px-4 shadow-md rounded-md border-none outline-none focus:outline-2 focus:outline-slate-500"
+						>
+							<option value={null}>Seleccione un Centro</option>
+							{centers.map((center) => (
+								<option key={center.id} value={center.id}>
+									{center.nombre}
+								</option>
+							))}
 						</select>
 					</div>
 					{error && <p className="text-red-700 mb-2">{error}</p>}

@@ -7,12 +7,43 @@ import links from "../links.json";
 import { usePathname } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
 import Session from "@/components/Session";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowBigRightDashIcon } from "lucide-react";
+import { ArrowBigRight, ArrowBigRightDashIcon } from "lucide-react";
 
 export default function Dashboard_Layout({ children }) {
-	const [open, setOpen] = useState(false)
+	const [open, setOpen] = useState(false);
+
+	const [vertical, setVertical] = useState(40);
+	const dragging = useRef(false);
+
+	const startDrag = (e) => {
+		dragging.current = true;
+		document.addEventListener("mousemove", onDrag);
+		document.addEventListener("mouseup", stopDrag);
+		document.addEventListener("touchmove", onDragTouch);
+		document.addEventListener("touchend", stopDrag);
+	};
+
+	const onDrag = (e) => {
+		if (!dragging.current) return;
+		setVertical(e.clientY + 24);
+	};
+
+	const onDragTouch = (e) => {
+		if (!dragging.current) return;
+		const touch = e.touches[0];
+		setVertical(touch.clientY + 24);
+	};
+
+	const stopDrag = () => {
+		dragging.current = false;
+		document.removeEventListener("mousemove", onDrag);
+		document.removeEventListener("mouseup", stopDrag);
+		document.removeEventListener("touchmove", onDragTouch);
+		document.removeEventListener("touchend", stopDrag);
+	};
+
 	const pathName = usePathname();
 
 	const handleOpen = () => {
@@ -21,10 +52,20 @@ export default function Dashboard_Layout({ children }) {
 
 	return (
 		<SessionProvider>
-			<div className="flex static">
-					<div className={`h-[100vh] w-[20%] min-w-[70px] m-0 bg-white pt-[20px] px-3 rounded-r 
-					fixed md:sidebar-folded `}>
-						<Image src="/next.svg" width={150} height={38} alt="logo" onClick={handleOpen} />
+			<div className="flex w-full">
+				{open ? (
+					<div
+						id="1"
+						className={`h-[100vh] w-[20%] min-w-[70px] m-0 bg-white pt-[20px] px-3 rounded-r fixed shadow-lg z-50
+					 md:sidebar-folded `}
+					>
+						<Image
+							src="/next.svg"
+							width={150}
+							height={38}
+							alt="logo"
+							onClick={handleOpen}
+						/>
 						<ul className="h-auto w-[100%] mt-10">
 							{links.map((link) => (
 								<li className="h-auto w-[100%] mb-5" key={link.name}>
@@ -35,6 +76,7 @@ export default function Dashboard_Layout({ children }) {
 												: "h-auto w-[100%] max-md:justify-center text-black flex place-items-center"
 										}
 										href={link.url}
+										onClick={handleOpen}
 									>
 										<Image
 											src={link.icon}
@@ -49,6 +91,19 @@ export default function Dashboard_Layout({ children }) {
 						</ul>
 						<Session />
 					</div>
+				) : (
+					<Button
+					style={{
+						top: vertical,
+					}}
+						onClick={handleOpen}
+						onMouseDown={startDrag}
+						onTouchStart={startDrag}
+						className='fixed z-30 h-12 w-12 rounded-r-full'
+					>
+						<ArrowBigRight />
+					</Button>
+				)}
 				{children}
 			</div>
 		</SessionProvider>
