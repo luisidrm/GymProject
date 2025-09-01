@@ -28,25 +28,32 @@ export default function TablaCompra({
 }) {
 	const {toast} = useToast()
 
+	const [error, setError] = useState("")
+
 	const costoTotal = () => {
 		let total = 0;
 		selectedProduct.map((product) => {
 			total =
 				total +
 				Number.parseFloat(product.venta) *
-					Number.parseFloat(product.cantidad || 1);
+					Number.parseFloat(product.cantidad || 0);
 		});
 		return total;
 	};
 
 	const updateCantidad = (id, e) => {
-		setSelectedProduct((prevItems) =>
-			prevItems.map((item) =>
-				item.id === id
-					? { ...item, cantidad: Number.parseFloat(e.target.value) }
-					: item,
-			),
-		);
+		if(e.target.value<0){
+			setError("No se permite introducir numeros negativos")
+			return	
+		}
+		setError("")
+			setSelectedProduct((prevItems) =>
+				prevItems.map((item) =>
+					item.id === id
+			? { ...item, cantidad: Number.parseFloat(e.target.value) }
+			: item,
+		),
+	);
 	};
 
 	const completarVenta = async () => {
@@ -77,9 +84,9 @@ export default function TablaCompra({
 					: "hidden"
 			}
 		>
-			<Table className="bg-slate-100 w-[50%] ml-[17%] mr-[25%] rounded-lg overflow-clip ">
-				<TableCaption className="text-white">
-					Lista completa de la compra.
+			<Table className="bg-slate-100 min-w-[412px] h-[auto] w-[80%] md:w-[50%] rounded-lg fixed left-[10%] md:left-[25%]">
+				<TableCaption className={`${error===""?"text-white":"text-red-500 font-bold"}`}>
+					{error===""?"Lista completa de la compra.": error}
 				</TableCaption>
 				<TableHeader>
 					<TableRow className="text-lg h-[50px]">
@@ -105,7 +112,7 @@ export default function TablaCompra({
 									value={
 										product.cantidad !== undefined
 											? Number.parseFloat(product.cantidad)
-											: 1
+											: undefined
 									}
 									onChange={(e) => updateCantidad(product.id, e)}
 								/>
@@ -116,7 +123,7 @@ export default function TablaCompra({
 				<TableFooter>
 					<TableRow>
 						<TableCell colSpan={2}>Total</TableCell>
-						<TableCell className="text-center">${costoTotal()}</TableCell>
+						<TableCell className="text-center">$ {costoTotal()}</TableCell>
 					</TableRow>
 					<TableRow>
 						<TableCell colSpan={2} className="flex justify-end">

@@ -76,7 +76,7 @@ model Shop {
 
 model Stock {
   id         Int     @id @default(autoincrement())
-  producto   Shop    @relation(fields: [productoId], references: [id])
+  producto   Shop    @relation(fields: [productoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   productoId Int     @unique
   cantidad   Decimal
 }
@@ -86,7 +86,7 @@ model Movimiento {
   tipo       MovimientoTipo
   cantidad   Decimal
   fecha      DateTime       @default(now())
-  producto   Shop           @relation(fields: [productoId], references: [id])
+  producto   Shop           @relation(fields: [productoId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   productoId Int
   nota       String?
 }

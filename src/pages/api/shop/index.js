@@ -37,11 +37,21 @@ export default async function handler(req, res) {
 
       await Promise.all(products.map(async (prod) => {
         const p = await prisma.stock.findUnique({
-          where:{
-            productoId:prod.id
+          where: {
+            productoId: prod.id
           }
         })
-        if(p.cantidad>=prod.cantidad){
+        if (p.cantidad >= Number.parseFloat(prod.cantidad)) {
+          await prisma.stock.update({
+            where: {
+              productoId: prod.id
+            },
+            data: {
+              cantidad: {
+                decrement: Number.parseFloat(prod.cantidad)
+              }
+            }
+          })
 
           await prisma.sales.create({
             data: {
@@ -50,17 +60,17 @@ export default async function handler(req, res) {
               precio: new Prisma.Decimal(prod.venta),
               cantidad: new Prisma.Decimal(prod.cantidad !== undefined ? Number.parseFloat(prod.cantidad) : 1),
               total: new Prisma.Decimal(prod.cantidad !== undefined ? Number.parseFloat(prod.cantidad)
-              * Number.parseFloat(prod.venta) : Number.parseFloat(prod.venta)),
+                * Number.parseFloat(prod.venta) : Number.parseFloat(prod.venta)),
               centroId: centro
             }
           })
-        }else{
+        } else {
           throw new Error("No tienes suficiente producto para completar la venta");
         }
       }))
       res.status(200).json({ message: "Venta completada" })
     } catch (error) {
-      res.status(405).json({message: error.message})
+      res.status(405).json({ message: error.message })
     } finally {
       await prisma.$disconnect()
     }

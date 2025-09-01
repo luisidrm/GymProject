@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       const centers = await prisma.centro.findMany()
       const movements = await prisma.movimiento.findMany({
         orderBy:{
-          fecha:"asc"
+          fecha:"desc"
         },
         include:{
           producto:true

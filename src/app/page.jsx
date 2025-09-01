@@ -7,6 +7,8 @@ import { FormEvent, useState } from "react";
 import { getCsrfToken, signIn } from "next-auth/react";
 
 export default function Home({ csrfToken }) {
+	const navigate = useRouter()
+
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +22,7 @@ export default function Home({ csrfToken }) {
 			username,
 			password,
 			callbackUrl: "/dashboard",
-		});
+		})
 
 		console.log(res);
 

@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import CredentialsProvider from "next-auth/providers/credentials"
+import { signOut } from 'next-auth/react';
 
 const prisma = new PrismaClient();
 
@@ -59,6 +60,8 @@ export const authOptions = {
         const usuario = await prisma.user.findFirst({
           where: { nombre: username },
         });
+        console.log(usuario);
+        
 
         if (!usuario) {
           console.log("User not found");
@@ -74,7 +77,8 @@ export const authOptions = {
         return {
           id: usuario.id_user.toString(), // make sure it's a string if using JWT
           name: usuario.nombre,
-          role: usuario.rol
+          role: usuario.rol,
+          centro: usuario.id_centro
         };
       },
     })
@@ -92,6 +96,7 @@ export const authOptions = {
       token.id = user.id_user;
       token.name = user.name;
       token.role = user.role
+      token.centro = user.centro
     }
     return token;
   },
@@ -101,6 +106,7 @@ export const authOptions = {
     session.user.id = token.id_user;
     session.user.name = token.name;
     session.user.role = token.role
+    session.user.centro = token.centro
 
     return session;
   },

@@ -1,5 +1,5 @@
-[] finishing the scalation of the database
-[] fix every controller that has to do with the centers, users, shop, stock and movement
-[] view for handling centers
-[] split the shop view into the different centers
-[] update every request in shop and sales so that they go to each center 
+[X] finishing the scalation of the database
+[X] fix every controller that has to do with the centers, users, shop, stock and movement
+[X] view for handling centers
+[X] split the shop view into the different centers
+[X] update every request in shop and sales so that they go to each center 

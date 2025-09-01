@@ -23,8 +23,11 @@ import AddProduct from "@/components/AddProduct.jsx";
 import { useToast } from "@/hooks/use-toast.js";
 import Loading from "./loading.jsx";
 import Link from "next/link.js";
+import { useSession } from "next-auth/react";
 
 export default function Page() {
+	const { data: session } = useSession();
+
 	const { toast } = useToast();
 
 	const [add, setAdd] = useState(false);
@@ -35,7 +38,9 @@ export default function Page() {
 
 	const [products, setProducts] = useState([]);
 	const [center, setCenter] = useState([]);
-	const [selectedCenter, setSelectedCenter] = useState(-1);
+	const [selectedCenter, setSelectedCenter] = useState(
+		session?.user?.role === "Administrador" ? -1 : session?.user?.centro,
+	);
 
 	const [element, setElement] = useState({});
 	const [selectedProduct, setSelectedProduct] = useState([]);
@@ -156,11 +161,12 @@ export default function Page() {
 				/>
 			)}
 			<Button
-				className="w-[50px] h-[50px] z-10 rounded-full shadow-xl fixed top-[85%] left-[90%] bg-slate-900 flex justify-center place-items-center text-center"
+				className="w-auto h-[50px] z-10 rounded-full shadow-xl fixed top-[85%] left-[80%] bg-slate-900 flex justify-center place-items-center text-center"
 				disabled={selectedProduct.length === 0}
 				onClick={handleCart}
 			>
 				<ShoppingBasket />
+				<span className="max-md:hidden">Venta</span>
 				{selectedProduct.length > 0 ? (
 					<div className="absolute w-[20px] h-[20px] right-[-8px] top-[-8px] z-20 rounded-full bg-red-600">
 						{selectedProduct.length}
@@ -173,16 +179,17 @@ export default function Page() {
 				<h1 className="xl:text-xl md:text-lg">Store Management</h1>
 				<div className="flex gap-3">
 					{selectedCenter !== -1 && (
-					<Link
-						href={{
-							pathname: "/dashboard/shop/stock",
-							query: { selectedCenter: selectedCenter },
-						}}
-						className="bg-[#0f172a] inline-flex items-center md:px-2 px-6 place-items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
-					>
-						<Warehouse stroke="white" />
-						<span className="max-md:hidden text-white">Stock</span>
-					</Link>)}
+						<Link
+							href={{
+								pathname: "/dashboard/shop/stock",
+								query: { selectedCenter: selectedCenter },
+							}}
+							className="bg-[#0f172a] inline-flex items-center md:px-2 px-6 place-items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+						>
+							<Warehouse stroke="white" />
+							<span className="max-md:hidden text-white">Stock</span>
+						</Link>
+					)}
 					{selectedCenter !== -1 && (
 						<Link
 							href={{
@@ -203,20 +210,22 @@ export default function Page() {
 				</div>
 			</div>
 			<div className="w-[100%] h-auto bg-transparent flex justify-center">
-				<span className="h-[50px] w-[98%] mx-[1%] mt-4  bg-slate-950 flex place-items-center px-5 user-select-none shadow-md rounded-md font-semibold ">
-					{center.map((center) => (
-						<button
-							type="button"
-							key={center.id}
-							onClick={() => setSelectedCenter(center.id)}
-							className={`${center.id === selectedCenter && "border-b-white"} text-white border-transparent py-2 border-b-2 px-4 hover:border-b-2 hover:border-white`}
-						>
-							{center.nombre}
-						</button>
-					))}
-				</span>
+				{session?.user?.role === "Administrador" && (
+					<span className="h-[50px] w-[98%] mx-[1%] mt-4  bg-slate-950 flex place-items-center px-5 user-select-none shadow-md rounded-md font-semibold ">
+						{center.map((center) => (
+							<button
+								type="button"
+								key={center.id}
+								onClick={() => setSelectedCenter(center.id)}
+								className={`${center.id === selectedCenter && "border-b-white"} text-white border-transparent py-2 border-b-2 px-4 hover:border-b-2 hover:border-white`}
+							>
+								{center.nombre}
+							</button>
+						))}
+					</span>
+				)}
 			</div>
-			<div className="h-[auto] min-h-60 w-[98%] pb-32 mt-4 grid lg:grid-cols-3 gap-3 xl:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 px-5 shadow-md rounded-md font-semibold">
+			<div className="h-[auto] min-h-60 w-[98%] pb-32 mt-4 grid lg:grid-cols-3 gap-3 xl:grid-cols-4 grid-cols-2 px-5 shadow-md rounded-md font-semibold">
 				{selectedCenter === -1 && (
 					<p className="absolute pt-32 w-[100%] place-items-center">
 						Seleccione un centro para comenzar a trabajar
@@ -230,7 +239,7 @@ export default function Page() {
 							role="button"
 							tabIndex={0}
 							onClick={() => selectProducts(product)}
-							className={`w-[100%] min-w-[250px] h-auto bg-white rounded-md shadow-md mt-4 ${selectedProduct.some((prod) => prod.id === product.id) ? "border border-black" : ""}`}
+							className={`w-[100%] min-w-[150px] h-auto bg-white rounded-md shadow-md mt-4 ${selectedProduct.some((prod) => prod.id === product.id) ? "border border-black" : ""}`}
 						>
 							<div className="flex justify-center">
 								<Image
@@ -274,7 +283,7 @@ export default function Page() {
 							</div>
 						</div>
 					))}
-				{products.length === 0 && selectedCenter !== -1 && (
+				{products.length === 0 && (
 					<p className="absolute pt-32 w-[100%] place-items-center">
 						No existen productos en este centro
 					</p>

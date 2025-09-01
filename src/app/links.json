@@ -1,40 +1,46 @@
 [
 	{
-		"name": "Dashboard",
+		"name": "Panel Principal",
 		"url": "/dashboard",
 		"icon": "/file.svg",
 		"rol": "Administrador"
 	},
 	{
-		"name": "Bussines Results",
+		"name": "Resultados",
 		"url": "/dashboard/month",
 		"icon": "/globe.svg",
 		"rol": "Administrador"
 	},
 	{
-		"name": "All Clients",
+		"name": "Clientes",
 		"url": "/dashboard/clients",
 		"icon": "/file.svg"
 	},
 	{
-		"name": "Trainers",
+		"name": "Entrenadores",
 		"url": "/dashboard/trainers",
 		"icon": "/file.svg"
 	},
 	{
-		"name": "Almacén",
+		"name": "Historial E/S",
 		"url": "/dashboard/almacen",
 		"icon": "/file.svg",
 		"rol": "Administrador"
 
 	},
 	{
-		"name": "Shop",
+		"name": "Tienda",
 		"url": "/dashboard/shop",
 		"icon": "/file.svg"
 	},
+		{
+		"name": "Centros",
+		"url": "/dashboard/center",
+		"icon": "/globe.svg",
+		"rol": "Administrador"
+	},
 	{
-		"name": "Users",
+		"name": "Usuarios",
 		"url": "/dashboard/users",
 		"icon": "/globe.svg",
 		"rol": "Administrador"
